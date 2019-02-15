@@ -1,68 +1,83 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Easy-starter 说明
 
-## Available Scripts
+[Easy-starter]() 是一个整合了 react 、 react-router v4 和 mobx 的起始项目脚手架。clone 到本地，然后运行 yarn start  就可以开始进行开发。
 
-In the project directory, you can run:
+## 添加页面
 
-### `npm start`
+### 在 component 中添加页面，比如 index.js
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+```
+import React, { Component } from 'react';
+import { observer , inject } from 'mobx-react';
+import { Redirect } from 'react-router-dom';
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+@inject("store")
+@observer
+export default class Index extends Component
+{
+    render()
+    {
+        return <p>Welcome to {this.props.store.appname}</p>;
+    }
+} 
+```
 
-### `npm test`
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### 在 App.js 中 import 它
 
-### `npm run build`
+```
+import Index from './component/Index';
+```
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 并添加到 Switch 标签里边
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+```
+<Route path="/index" component={Index} />
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+这样就能访问到对应的页面了
 
-### `npm run eject`
+## 添加全局数据和方法
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+只供单个组件使用的数据写到 state 里边即可；多个组件用的数据写到 store/AppState.js 里边。
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```
+@observable var-you-added = "EasyStarter";  
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+之后可以直接在组件中调用：
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+```
+{this.props.store.var-you-added}
+```
 
-## Learn More
+对网络请求、文件写入等异步操作，应该全部写入到 AppState.js 中。需要使用 @action 修饰符，建议使用 async/await 来处理异步。
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```
+@action 
+    async get_resume( id )
+    {
+        var params = new URLSearchParams();
+        params.append("id" , id);
+        const { data } = await axios.post( 'http://o.ftqq.com/?m=resume&a=detail' , params );
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+        if( parseInt( data.code , 10 ) === 0  )
+        {
+            this.current_resume_id = data.data.id;
+            this.current_resume_title = data.data.title;
+            this.current_resume_content = data.data.content;
+        }
+        return data ;
+    }
+```
+## 自带 SCSS 支持
 
-### Code Splitting
+可直接 import .scss 文件。
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
 
-### Analyzing the Bundle Size
+## 自带 i18n 支持
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+使用 react-i18n 进行国际化，配置见 ./i18n.js ，语言包文件在 ./public/locales 下，为 Json 格式。
 
-### Making a Progressive Web App
+## 默认添加 DocumentTitle 设置页面 title
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
