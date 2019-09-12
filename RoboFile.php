@@ -4,6 +4,31 @@ define( "SRC" , __DIR__ . '/src' );
 class RoboFile extends \Robo\Tasks
 {
     /**
+     * git commit
+     */
+    public function git( $m = 'update' )
+    {
+        $this->_exec("git add . && git commit -m '" . $m . "' && git push -u origin master");
+    }
+
+    /**
+     * 创建一个新的页面 快捷
+     */
+    public function ns( $name = null )
+    {
+        return $this->newScreen( $name );
+    }
+
+    /**
+     * 创建一个新的组件 快捷
+     */
+    public function nc( $name = null )
+    {
+        return $this->newComponent( $name );
+    }
+
+    
+    /**
      * 创建一个新的页面
      */
     public function newScreen( $name = null )

@@ -10,21 +10,11 @@ import DocumentTitle from 'react-document-title';
 @translate()
 @inject("store")
 @observer
-export default class ClassNamePlaceHolder extends Component
+export default class Editor extends Component
 {
-    // constructor(props) 
-    // {
-    //     super(props);
-    // }
-    
-    // componentDidMount()
-    // {
-    //    // 
-    // }
-
     render()
     {
-        const main = <div>ClassNamePlaceHolder</div>;
+        const main = <div>Editor</div>;
         return <DocumentTitle title={this.props.store.appname}>{main}</DocumentTitle>;
     }
 }

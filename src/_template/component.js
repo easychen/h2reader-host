@@ -9,6 +9,24 @@ import { translate } from 'react-i18next';
 @observer
 export default class ClassNamePlaceHolder extends Component
 {
+    // constructor(props) 
+    // {
+    //     super(props);
+    // }
+    
+    // componentDidMount()
+    // {
+    //    // 
+    // }
+
+    // componentDidUpdate(prevProps)
+    // {
+    //     if (this.props.data !== prevProps.data) 
+    //     {
+           
+    //     }
+    // }
+    
     render()
     {
         return <div>ClassNamePlaceHolder</div>;
