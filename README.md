@@ -1,83 +1,71 @@
-# Easy-starter 说明
+## 方糖氢小说阅读器
 
-[Easy-starter]() 是一个整合了 react 、 react-router v4 和 mobx 的起始项目脚手架。clone 到本地，然后运行 yarn start  就可以开始进行开发。
+⚠️ 已经更新为V2，内置了头像和小说元信息，不再兼容之前的格式，[V1版本见这里](https://github.com/easychen/h2webreader/tree/v1)
 
-## 添加页面
+---
 
-### 在 component 中添加页面，比如 index.js
+氢小说(H2 Book)是一种对话体、类剧本式的图书格式。它采用对话和场景来展现故事、描述事实，又非常接近于我们平时使用的聊天软件，所以读起来更为轻松。
 
-```
-import React, { Component } from 'react';
-import { observer , inject } from 'mobx-react';
-import { Redirect } from 'react-router-dom';
+[点这里感受下](http://du.ftqq.com)  && [使用帮助](http://du.ftqq.com/read/1)
 
-@inject("store")
-@observer
-export default class Index extends Component
-{
-    render()
-    {
-        return <p>Welcome to {this.props.store.appname}</p>;
-    }
-} 
-```
+访问 [qing.ftqq.com](https://qing.ftqq.com) 可以在线编辑 H2 Book的内容。通过右下角最末的导出按钮，可以下载为 h2book 格式的文件。方糖氢小说阅读器（即本项目）则负责读取 h2book 并提供阅读界面。
 
+### 使用方法
 
-### 在 App.js 中 import 它
+#### 创作内容
+
+- 到 [qing.ftqq.com](https://qing.ftqq.com) 编写书籍内容。
+- 右下角最末的导出按钮，获得 `*.h2book` 文件。
+
+#### 制作阅读器
 
 ```
-import Index from './component/Index';
+git clone https://github.com/easychen/h2webreader
+cd h2webreader
+yarn 
 ```
 
-### 并添加到 Switch 标签里边
+然后将之前下载 `*.h2book` 文件改名为 `2.h2zip` 放入 `public/books` 目录下。
 
 ```
-<Route path="/index" component={Index} />
+yarn start
 ```
 
-这样就能访问到对应的页面了
+打开浏览器访问 `http://localhost:3000/2` 就可以阅读了。注意目录名称要和 `.h2book` 文件名一致（不包括后缀）。这时候可以修改 `index.scss` 来定制阅读界面的样式。
 
-## 添加全局数据和方法
+#### 文章列表
 
-只供单个组件使用的数据写到 state 里边即可；多个组件用的数据写到 store/AppState.js 里边。
+修改 books/index.json 可以修改首页显示的文章列表。
 
-```
-@observable var-you-added = "EasyStarter";  
-```
+#### 发布阅读器
 
-之后可以直接在组件中调用：
+定制完成后，运行 
 
 ```
-{this.props.store.var-you-added}
+yarn build
 ```
 
-对网络请求、文件写入等异步操作，应该全部写入到 AppState.js 中。需要使用 @action 修饰符，建议使用 async/await 来处理异步。
+会在根下生成一个 `build` 目录，将目录下所有内容放到一个服务器的 web 目录下就OK了。注意本项目只附带了 apache 的 rewrite 文件，其他服务器需自己添加。
 
+Nginx 参考：
+
+https://stackoverflow.com/questions/36304302/how-can-i-configure-react-router-to-with-nginx-cherrypy-and-my-current-reactjs-a
 ```
-@action 
-    async get_resume( id )
-    {
-        var params = new URLSearchParams();
-        params.append("id" , id);
-        const { data } = await axios.post( 'http://o.ftqq.com/?m=resume&a=detail' , params );
+location / {
+    root /var/www;
+    index index.html;
 
-        if( parseInt( data.code , 10 ) === 0  )
-        {
-            this.current_resume_id = data.data.id;
-            this.current_resume_title = data.data.title;
-            this.current_resume_content = data.data.content;
-        }
-        return data ;
-    }
-```
-## 自带 SCSS 支持
+    try_files $uri $uri/ /index.html;
+}
+```  
 
-可直接 import .scss 文件。
+#### 追加图书
+
+新写了图书，只要将 `.h2book` 文件放到服务器 web 目录下的 `books` 之下，就可以通过 url （ http://domian/bookname ） 进行访问了。
+
+### License
+
+MIT 
 
 
-## 自带 i18n 支持
-
-使用 react-i18n 进行国际化，配置见 ./i18n.js ，语言包文件在 ./public/locales 下，为 Json 格式。
-
-## 默认添加 DocumentTitle 设置页面 title
 
