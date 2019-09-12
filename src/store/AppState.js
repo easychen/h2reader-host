@@ -3,7 +3,7 @@ import axios from 'axios';
 
 class AppState
 {
-    @observable appname = "EasyStarter";    
+    @observable appname = "方糖氢小说·阅读器";    
 }
 
 export default new AppState();

@@ -88,6 +88,8 @@ export default class Reader extends Component
         const main = <div className="read-page">{state.talks && state.talks.length > 0 && <TalkList talks={state.talks} roles={state.roles} meta={state.meta}  />}
         </div>;
 
-        return <DocumentTitle title={this.props.store.appname}>{main}</DocumentTitle>;
+        const title = state.meta.name ? state.meta.name + '@' + this.props.store.appname : this.props.store.appname;
+
+        return <DocumentTitle title={title}>{main}</DocumentTitle>;
     }
 }
