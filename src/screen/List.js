@@ -3,8 +3,10 @@ import { observer , inject } from 'mobx-react';
 import { Link } from "react-router-dom";
 import { withRouter } from 'react-router-dom';
 import { translate } from 'react-i18next';
-import { ControlGroup, InputGroup, Button  } from "@blueprintjs/core";
+import { ControlGroup, InputGroup, Button, FileInput  } from "@blueprintjs/core";
 import BookItem from '../component/BookItem'; 
+import UploadButton from '../component/UploadButton'; 
+
 
 
 import DocumentTitle from 'react-document-title';
@@ -35,7 +37,7 @@ export default class List extends Component
 
     doJump()
     {
-        this.props.history.push('/read/'+encodeURIComponent( this.state.bookurl ));
+        this.props.history.push('/read/'+encodeURIComponent(encodeURIComponent( this.state.bookurl )));
         //console.log( this.props );
     }
     
@@ -44,7 +46,7 @@ export default class List extends Component
         readTextFile( 'books/index.json' , ( data )=>
         {
             if( data )
-                this.setState( { "books":JSON.parse( data ) } )
+                this.setState( { ...JSON.parse( data ) } )
         } );
         
     }
@@ -55,13 +57,25 @@ export default class List extends Component
         let count = 1;
         
         const main = <div className="list-page">
-        <div className="JumpBox">
-        <ControlGroup fill={true} vertical={false}>
+        <div className="jumpbox">
+            <div className="row">
+                <div className="left">
+                    <ControlGroup fill={true} vertical={false}>
 
-            <InputGroup placeholder="输入.h2book文件的url..." value={this.state.bookurl} onChange={ ( evt )=>{ this.setState( { "bookurl" : evt.target.value } ) }} large={true} />
+                    <InputGroup placeholder="输入.h2book文件的url..." value={this.state.bookurl} onChange={ ( evt )=>{ this.setState( { "bookurl" : evt.target.value } ) }} large={true} />
 
-            <Button icon="arrow-right" onClick={()=>{this.doJump()}} large={true} />
-        </ControlGroup>
+                    <Button icon="arrow-right" onClick={()=>{this.doJump()}} large={true} />
+
+                    </ControlGroup>
+                </div>
+                { this.state.upload_url &&  <div className="right">
+                    <UploadButton upload_url={this.state.upload_url} site_url={this.state.site_url} />
+                    
+                </div> }
+            </div>
+        
+
+        
         </div>
 
         <div className="logoline">

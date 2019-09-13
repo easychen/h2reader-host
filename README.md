@@ -61,7 +61,33 @@ location / {
 
 #### 追加图书
 
-新写了图书，只要将 `.h2book` 文件放到服务器 web 目录下的 `books` 之下，就可以通过 url （ http://domian/bookname ） 进行访问了。
+新写了图书，只要将 `.h2book` 文件放到服务器 web 目录下的 `books` 之下，就可以通过 url （ http://domain/bookname ） 进行访问了。
+
+
+#### 上传图书
+
+最新版添加了一个PHP脚本，如果你把 build 出来的目录放到支持PHP的目录，就可以上传图书。注意是任何人都以上传，如果想控制权限，可以自己加一个 http basic 认证在前边。
+
+下边详细说说：
+
+- 确保环境支持php7.0+
+- 确保books目录可写
+  
+设置 books/index.json 文件
+
+```
+{
+    "books":
+    [
+        {"name":"方糖氢小说使用说明","bookurl":"1"},
+        {"name":"FreeSource Vol1","bookurl":"2"},
+        {"name":"程序员和说学逗唱","bookurl":"3"}
+    ],
+    "upload_url":"/api.php", <--- 不想开放上传的时候，写成空就行；也可以写其他网站的url。
+    "site_url":"http://domain"  <--- 当前阅读器网站的url，用来拼接二维码的地址。最后不要加斜杠。
+}
+```
+
 
 ### License
 

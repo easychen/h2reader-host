@@ -6,6 +6,8 @@
 /.pnp
 .pnp.js
 
+/public/books/*.h2book
+
 # testing
 /coverage
 

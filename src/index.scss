@@ -20,6 +20,85 @@ a
     }
 }
 
+.jumpbox
+{
+    .row
+    {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        > *
+        {
+            flex:1;
+        }
+        
+        .right
+        {
+            max-width:60px;
+            display: flex;
+            justify-content: flex-end;
+        }
+    }
+}
+
+.overbox
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width:100%;
+    height:100%;
+    .centerbox
+    {
+        max-width:600px;
+        background-color: white;
+        padding:20px;
+        border:1px solid #eee;
+        border-radius: 5px;
+        overflow-wrap: break-word;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        .explain
+        {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .read
+        {
+            margin-bottom: 20px;
+        }
+    }
+}
+
+.therow
+{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    > *
+    {
+        flex:1;
+        max-width:48%;
+    }
+    margin-bottom:20px;
+    
+}
+
+.std-hr
+{
+    border-top: 1px solid #eee;
+    margin-top:30px;
+    height:30px; 
+    width:calc( 100% + 40px );
+    position: relative;
+    left:-20px;
+}
+
+
+
 .list-page
 {
     max-width:400px;
@@ -120,17 +199,43 @@ a.thelink
 {
     .guide
     {
-        padding-left:60px;
-        padding-right:60px;
-        padding-top:80px;
+        padding-left:80px;
+        padding-right:80px;
+        padding-top:40px;
 
         // background-color: antiquewhite;
         margin-top:10px;
         font-size:16px;
-        color:#aaa;
+        color:#ccc;
         > *
         {
             margin-top:10px;
+        }
+
+        .back
+        {
+            text-align:center;
+            svg
+            {
+                fill:#ddd;
+                max-width:100%!important;
+                &:hover
+                {
+                    fill:rgb(31, 182, 255); 
+                }
+            }
+
+            margin-bottom:40px;
+        }
+
+        .logo
+        {
+            text-align: center;
+            img
+            {
+                max-width:120px;
+                max-height:120px;
+            }
         }
 
         .name
@@ -139,10 +244,16 @@ a.thelink
             color:#333;
         }
 
+        .detail
+        {
+            line-height: 30px;
+            color:#333;
+        }
+
         .continue
         {
-            margin-top:40px;
-            text-align: center;
+            margin-top:20px;
+            color:#999;
         }
 
         svg

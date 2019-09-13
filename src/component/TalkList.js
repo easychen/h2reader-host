@@ -3,7 +3,7 @@ import { observer , inject } from 'mobx-react';
 import { withRouter, Link } from 'react-router-dom';
 import { translate } from 'react-i18next';
 import TalkItem from '../component/TalkItem'; 
-import { Icon  } from "@blueprintjs/core";
+import { Icon, AnchorButton  } from "@blueprintjs/core";
 
 @withRouter
 @translate()
@@ -120,6 +120,10 @@ export default class TalkList extends Component
             : 
             
             <div className="guide">
+                <div className="logo"> <img src="/image/h2.logo.png" /> </div>
+                <div className="back">
+                    <Link to="/"><Icon iconSize={40} icon="circle-arrow-left" /></Link>
+                </div>
                 { this.props.meta && <><div className="name">{this.props.meta.name}</div>
                 <div className="author"><Icon icon="user" /> {this.props.meta.author}</div>
                 <div className="link"><Icon icon="link" /> {this.props.meta.link}</div>

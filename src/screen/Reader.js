@@ -52,6 +52,7 @@ export default class Reader extends Component
                 {
                     window.alert("文件载入失败，请返回确认地址是否正确。");
                     console.log( err );
+                    this.props.history.replace("/");
                     // throw err; // or handle err
                 }
                 else
@@ -72,6 +73,7 @@ export default class Reader extends Component
         {
             alert("文件载入失败，请返回确认地址是否正确。");
             console.log( err );
+            this.props.history.replace("/");
         }
         
 
