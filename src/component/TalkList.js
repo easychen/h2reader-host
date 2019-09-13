@@ -101,6 +101,12 @@ export default class TalkList extends Component
             this.end_ref.current.scrollIntoView( true );
     }
 
+    goBack()
+    {
+        if( !window.confirm( "当前章节已经完成，是否返回首页？" ) ) return false;
+        this.props.history.push("/");
+    }
+
     
 
     render()
@@ -139,7 +145,7 @@ export default class TalkList extends Component
 
             </div>
             <div className="touchpad" onClick={()=>this.showOne()}>
-                {state.end ? <Link className="thelink" to="/"><span className="blink noselect" > done </span></Link> : <span className="blink noselect" > ✦ </span>}
+                {state.end ? <span className="blink noselect" onClick={()=>this.goBack()}> done </span> : <span className="blink noselect" > ✦ </span>}
             </div>
             
         </div> : null ;
