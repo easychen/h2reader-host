@@ -8,6 +8,19 @@ import JSZip from 'jszip';
 import DocumentTitle from 'react-document-title';
 import TalkList from '../component/TalkList';
 
+function readTextFile(file, callback) 
+{
+    var rawFile = new XMLHttpRequest();
+    rawFile.overrideMimeType("application/json");
+    rawFile.open("GET", file, true);
+    rawFile.onreadystatechange = function() {
+        if (rawFile.readyState === 4 && rawFile.status == "200") {
+            callback(rawFile.responseText);
+        }
+    }
+    rawFile.send(null);
+}
+
 @withRouter
 @translate()
 @inject("store")
@@ -46,29 +59,39 @@ export default class Reader extends Component
 
         try
         {
-            JSZipUtils.getBinaryContent( bookpath , async ( err, data ) => 
+            // JSZipUtils.getBinaryContent( bookpath , async ( err, data ) => 
+            // {
+            //     if(err) 
+            //     {
+            //         window.alert("文件载入失败，请返回确认地址是否正确。");
+            //         console.log( err );
+            //         this.props.history.replace("/");
+            //         // throw err; // or handle err
+            //     }
+            //     else
+            //     {
+            //         //console.log("FILE OK");
+
+            //         const zip = await JSZip.loadAsync( data );
+            //         const data2 = await zip.file("h2content.json").async("string");
+            //         const jsondata = JSON.parse( data2 );
+
+            //         if( jsondata )
+            //         {
+            //             this.setState( {...jsondata} );
+            //         }                
+            //     }
+            // });
+            readTextFile( bookpath , ( data ) =>
             {
-                if(err) 
-                {
-                    window.alert("文件载入失败，请返回确认地址是否正确。");
-                    console.log( err );
-                    this.props.history.replace("/");
-                    // throw err; // or handle err
-                }
-                else
-                {
-                    //console.log("FILE OK");
+                const jsondata = JSON.parse( data );
 
-                    const zip = await JSZip.loadAsync( data );
-                    const data2 = await zip.file("h2content.json").async("string");
-                    const jsondata = JSON.parse( data2 );
-
-                    if( jsondata )
-                    {
-                        this.setState( {...jsondata} );
-                    }                
-                }
+                if( jsondata )
+                {
+                    this.setState( {...jsondata} );
+                }   
             });
+
         }catch( e )
         {
             alert("文件载入失败，请返回确认地址是否正确。");
