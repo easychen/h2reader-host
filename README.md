@@ -1,51 +1,71 @@
-## 方糖氢小说阅读器
+## 方糖氢小说·阅读器
 
 ⚠️ 已经更新为V2，内置了头像和小说元信息，不再兼容之前的格式，[V1版本见这里](https://github.com/easychen/h2webreader/tree/v1)
 
 ---
+## 什么是氢小说
 
-氢小说(H2 Book)是一种对话体、类剧本式的图书格式。它采用对话和场景来展现故事、描述事实，又非常接近于我们平时使用的聊天软件，所以读起来更为轻松。
+氢小说(H2 Book)是我们定义的一种对话体、类剧本式的开放图书格式。它采用对话和场景来展现故事、描述事实，又非常接近于我们平时使用的聊天软件，所以读起来更为轻松。
 
-[点这里感受下](http://du.ftqq.com)  && [使用帮助](http://du.ftqq.com/read/1)
+## 氢小说文件格式
 
-访问 [qing.ftqq.com](https://qing.ftqq.com) 可以在线编辑 H2 Book的内容。通过右下角最末的导出按钮，可以下载为 h2book 格式的文件。方糖氢小说阅读器（即本项目）则负责读取 h2book 并提供阅读界面。
+氢小说文件有两种格式，分别是：
 
-### 使用方法
+- 用于作者的多章节格式 .h2doc
+- 用于读者的单章节格式 .h2book
 
-#### 创作内容
+两者均为 json 纯文本。
 
-- 到 [qing.ftqq.com](https://qing.ftqq.com) 编写书籍内容。
-- 右下角最末的导出按钮，获得 `*.h2book` 文件。
+### .h2doc
 
-#### 制作阅读器
+包含以下属性
+
+- bookinfo 小说元信息
+- chpaters 章节信息
+- roles 角色信息
+- talks 剧本
+
+### .h2book 
+
+包含以下属性
+
+- meta 章节元信息
+- roles 角色信息
+- talks 剧本
+
+## 如何编写和阅读氢小说
+
+1. 使用氢小说编辑器编写，比如[方糖氢小说的编辑器](https://qing.ftqq.com)
+2. 可以随时保存文件为 .h2doc 供以后编辑修改
+3. 一章写完以后，可导出章节为 .h2book 文件，用于分发 
+4. 读者拿到 .h2book ，通过阅读器阅读。
+
+本项目，即是 Web版本的阅读器网站，你可以把 .h2book 上传上来，获得一个阅读二维码，用手机扫码即可阅读。
+
+[Demo网站](https://du.slidechan.com)
+
+## 阅读器的架设
+
+你可以自行架设阅读器，并修改其代码进行开发和定制。
+
+### 开发
 
 ```
-git clone https://github.com/easychen/h2webreader
-cd h2webreader
-yarn 
-```
-
-然后将之前下载 `*.h2book` 文件改名为 `2.h2zip` 放入 `public/books` 目录下。
-
-```
+git clone https://github.com/easychen/h2reader-host
+cd h2reader-host
+yarn install
 yarn start
 ```
 
-打开浏览器访问 `http://localhost:3000/2` 就可以阅读了。注意目录名称要和 `.h2book` 文件名一致（不包括后缀）。这时候可以修改 `index.scss` 来定制阅读界面的样式。
-
-#### 文章列表
-
-修改 books/index.json 可以修改首页显示的文章列表。
-
-#### 发布阅读器
-
-定制完成后，运行 
+### 部署
 
 ```
 yarn build
 ```
 
-会在根下生成一个 `build` 目录，将目录下所有内容放到一个服务器的 web 目录下就OK了。注意本项目只附带了 apache 的 rewrite 文件，其他服务器需自己添加。
+然后将 build 目录下的内容放到服务器目录。
+
+注意本项目只附带了 apache 的 rewrite 文件，其他服务器需自己添加。
 
 Nginx 参考：
 
@@ -57,23 +77,28 @@ location / {
 
     try_files $uri $uri/ /index.html;
 }
-```  
+```
 
-#### 追加图书
+### 上传图书
 
-新写了图书，只要将 `.h2book` 文件放到服务器 web 目录下的 `books` 之下，就可以通过 url （ http://domain/bookname ） 进行访问了。
+分为静态上传和动态上传两种方式。
+
+#### 静态上传
+
+将 `.h2book` 文件放到服务器 web 目录下的 `books` 之下，即可通过 url （ http://domain/bookname ） 进行访问。
+
+你可以修改 `books/index.json` 中 `books` 数组来调整默认列表。
 
 
-#### 上传图书
+#### 动态上传
 
-最新版添加了一个PHP脚本，如果你把 build 出来的目录放到支持PHP的目录，就可以上传图书。注意是任何人都以上传，如果想控制权限，可以自己加一个 http basic 认证在前边。
+支持通过 PHP 上传 `.h2book` 文件，这样就不用每次手工上传了。 注意默认是任何人都以上传，如果想控制权限，可以自己加一个 http basic 认证在 api.php 前边。
 
-下边详细说说：
 
 - 确保环境支持php7.0+
 - 确保books目录可写
   
-设置 books/index.json 文件
+然后设置 `books/index.json` 文件
 
 ```
 {
@@ -87,7 +112,7 @@ location / {
     "site_url":"http://domain"  <--- 当前阅读器网站的url，用来拼接二维码的地址。最后不要加斜杠。
 }
 ```
-
+访问首页即可在右上方看到上传按钮。
 
 ### License
 
