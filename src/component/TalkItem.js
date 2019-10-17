@@ -3,7 +3,20 @@ import { observer , inject } from 'mobx-react';
 import { withRouter } from 'react-router-dom';
 import { translate } from 'react-i18next';
 import AvatarSquare from '../component/AvatarSquare';
+import ImageZoom from 'react-medium-image-zoom';
+import ReactMarkdown from 'react-markdown';
 
+function LinkRenderer(props) 
+{
+    return <a href={props.href} target="_blank">{props.children}</a>
+}
+
+function ImageZoomed( props )
+{
+    return <ImageZoom  
+    image={{ src: props.src , className:"imginbox" }} 
+    />
+}
 
 @withRouter
 @translate()
@@ -43,11 +56,11 @@ export default class TalkItem extends Component
                 </div>
                 <div className="contentside">
                     <div className="name">{role.name}</div>
-                    <div className="text">{talk.text}</div>
+                    <div className="text"><ReactMarkdown source={talk.text} renderers={{link: LinkRenderer,image:ImageZoomed}}/></div>
                 </div>
                 
                 </div>
             :
-            <div className="talk-list-item-ro aside" ><div className="aside-text">{talk.text}</div></div>;
+            <div className="talk-list-item-ro aside" ><div className="aside-text"><ReactMarkdown source={talk.text} renderers={{link: LinkRenderer,image:ImageZoomed}}/></div></div>;
     }
 }

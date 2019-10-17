@@ -267,6 +267,49 @@ a.thelink
 
 .talk-list-item-ro
 {
+    *{
+        word-break: break-all;
+    }
+
+    img.imginbox
+    {
+        max-width: 100%;
+        border-radius: 8px;
+        padding:5px;
+    }
+    
+    &.aside
+    { 
+        a
+        {
+            color:white;
+            border-bottom:1px solid white;
+            text-decoration: none
+        }
+    };
+
+    &.role
+    { 
+        &.notmain
+        {
+            a
+            {
+                color:black;
+                border-bottom:1px solid black;
+                text-decoration: none
+            }
+        }
+        
+        &.main
+        {
+            a
+            {
+                color:white;
+                border-bottom:1px solid white;
+            }
+        }
+    };
+    
     user-select: none;
     padding:10px;
     line-height: 1.6;
@@ -281,6 +324,7 @@ a.thelink
         text-align:center;
         .aside-text
         {
+            p{margin:0px;}
             background-color: #ccc;
             padding:5px;
             padding-left:8px;
@@ -321,6 +365,7 @@ a.thelink
             }
             .text
             {
+                p{margin:0px;}
                 padding:8px;
                 border-radius: 3px;
                 display:inline-block;
@@ -351,6 +396,7 @@ a.thelink
                 padding-left:8px;
                 .text
                 {
+                    p{margin:0px;}
                     z-index:2;
                     background-color: white;
                     box-shadow: 1px 1px 0px 0px rgba(0,0,0,0.15);
