@@ -80,7 +80,7 @@ export default class List extends Component
 
         <div className="logoline">
             <img src="/image/h2.logo.png" alt="logo"/>
-            <div className="subtitle">氢小说列表</div>
+            {/* <div className="subtitle">列表</div> */}
         </div>
         <ul className="booklist">
         { books.length > 0 && books.map((item)=>{
