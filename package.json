@@ -8,7 +8,7 @@
     "i18next": "^17.0.14",
     "i18next-browser-languagedetector": "^3.0.3",
     "i18next-xhr-backend": "^3.1.2",
-    "jszip": "^3.7.0",
+    "jszip": "^3.8.0",
     "jszip-utils": "^0.1.0",
     "mobx": "^5.13.0",
     "mobx-react": "^6.1.3",
