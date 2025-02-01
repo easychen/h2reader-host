@@ -21,6 +21,17 @@ function readTextFile(file, callback)
     rawFile.send(null);
 }
 
+const sortTalks = (talks) => {
+  return [...talks].sort((a, b) => {
+    // 首先按 chapter_id 排序
+    if (a.chapter_id !== b.chapter_id) {
+      return a.chapter_id - b.chapter_id;
+    }
+    // chapter_id 相同时，按 order 排序
+    return a.order - b.order;
+  });
+};
+
 @withRouter
 @translate()
 @inject("store")
@@ -88,6 +99,8 @@ export default class Reader extends Component
 
                 if( jsondata )
                 {
+                    const sortedTalks = sortTalks(jsondata.talks);
+                    jsondata.talks = sortedTalks;
                     this.setState( {...jsondata} );
                 }   
             });
@@ -95,7 +108,7 @@ export default class Reader extends Component
         }catch( e )
         {
             alert("文件载入失败，请返回确认地址是否正确。");
-            console.log( err );
+            console.log( e );
             this.props.history.replace("/");
         }
         

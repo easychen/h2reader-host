@@ -3,7 +3,7 @@ import { observer , inject } from 'mobx-react';
 import { withRouter } from 'react-router-dom';
 import { translate } from 'react-i18next';
 
-import { Button, Overlay, ControlGroup, InputGroup, AnchorButton  } from "@blueprintjs/core";
+import { Button, Overlay, ControlGroup, InputGroup, AnchorButton, Dialog, FormGroup  } from "@blueprintjs/core";
 import Dropzone from 'react-dropzone';
 import axios from 'axios';
 import QRImage from '../component/QRImage';
@@ -19,54 +19,85 @@ export default class UploadButton extends Component
     {
         super(props);
         this.drop_ref = React.createRef();
-        this.state = { "url" : false };
+        this.state = { 
+            url: false,
+            showKeyDialog: false,
+            uploadKey: '',
+            selectedFile: null
+        };
     }
     
     // componentDidMount()
     // {
     //    // 
     // }
-    async onDropped( files )
+    async onDropped( acceptedFiles )
     {
-        if( !this.props.upload_url )
-        {
-            alert("错误的上传地址");
-            return false;
-        }
+        this.setState({
+            selectedFile: acceptedFiles[0],
+            showKeyDialog: true
+        });
+    }
 
-        const formData = new FormData();
-        formData.append("book", files[0]);
+    async handleUpload() {
+        try {
+            const formData = new FormData();
+            formData.append("book", this.state.selectedFile);
+            formData.append("upload_key", this.state.uploadKey);
 
-        // const store = this.props.store;
-        // store.openFile( files[0] );
-        const { data } = await axios.post( this.props.upload_url , formData);
-
-        if( data.code > 0 )
-        {
-            alert( data.message );
-        }
-        else
-        {
-            if( data.data && data.data.url )
-            {
-                // show qrcode
-                this.setState( {"url":data.data.url} );
+            let uploadUrl = this.props.upload_url;
+            
+            if(uploadUrl.startsWith('/')) {
+                const protocol = window.location.protocol;
+                const host = window.location.host;
+                uploadUrl = `${protocol}//${host}${uploadUrl}`;
             }
-        }  
+
+            const response = await axios.post(uploadUrl, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+
+            if(response.data.code === 0) {
+                this.setState({
+                    url: response.data.data.url,
+                    showKeyDialog: false,
+                    uploadKey: '',
+                    selectedFile: null
+                });
+            } else {
+                alert('上传失败: ' + response.data.message);
+            }
+        } catch (error) {
+            console.error('Upload error:', error);
+            if (error.response && error.response.data && error.response.data.message) {
+                alert('上传失败: ' + error.response.data.message);
+            } else {
+                alert('上传失败,请检查服务器连接');
+            }
+        }
     }
 
     onClose()
     {
         if( !window.confirm("关闭后将无法找到这个地址，请确定保存后再关闭。是否继续？") ) return false;
 
-        this.setState({"url":false});
+        this.setState({url:false});
     }
 
     
 
     render()
     {
-        const read_url = this.props.site_url + '/read/'+ encodeURIComponent(encodeURIComponent(this.state.url));
+        // 获取当前站点URL作为基础URL
+        const baseUrl = window.location.origin;
+        
+        // 如果 site_url 为空,就使用当前站点URL
+        const siteUrl = this.props.site_url || baseUrl;
+        
+        // 构建完整的阅读URL
+        const read_url = this.state.url ? `${siteUrl}/read/${encodeURIComponent(this.state.url)}` : '';
 
         return <><Dropzone 
         accept=".h2book"  
@@ -84,6 +115,29 @@ export default class UploadButton extends Component
 
         )}
             </Dropzone>
+
+            <Dialog
+                isOpen={this.state.showKeyDialog}
+                onClose={() => this.setState({ showKeyDialog: false })}
+                title="请输入上传密钥"
+            >
+                <div className="bp3-dialog-body">
+                    <FormGroup label="上传密钥">
+                        <InputGroup
+                            value={this.state.uploadKey}
+                            onChange={(e) => this.setState({ uploadKey: e.target.value })}
+                            placeholder="请输入上传密钥"
+                        />
+                    </FormGroup>
+                </div>
+                <div className="bp3-dialog-footer">
+                    <div className="bp3-dialog-footer-actions">
+                        <Button onClick={() => this.setState({ showKeyDialog: false })} text="取消" />
+                        <Button intent="primary" onClick={() => this.handleUpload()} text="上传" />
+                    </div>
+                </div>
+            </Dialog>
+
             <Overlay isOpen={this.state.url } >
             <div className="overbox">
                 <div className="centerbox">

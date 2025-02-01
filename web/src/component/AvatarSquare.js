@@ -24,7 +24,7 @@ export default class AvatarSquare extends Component
         // const store = this.props.store;
         const props = this.props;
 
-        const url = props.data.base64 || "/image/h2editor.logo.png"; 
+        const url = props.data.base64 || "/image/h2.any.png"; 
         const class_name = props.className ? "avatar-square " + props.className :  "avatar-square ";
         
         return <div className={class_name} onClick={(e)=>{if(props.onClick)props.onClick(e);}}><img src={url} alt={props.data.name} /></div>;

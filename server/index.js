@@ -21,7 +21,7 @@ app.use(express.json());
 app.use(fileUpload());
 
 // 静态文件服务
-app.use(express.static(join(__dirname, 'public')));
+app.use(express.static(join(__dirname, '../')));
 
 // 创建上传端点
 app.post('/api/upload', async (req, res) => {
@@ -50,7 +50,7 @@ app.post('/api/upload', async (req, res) => {
       });
     } else {
       // 本地存储
-      const uploadDir = join(__dirname, 'public', 'uploads');
+      const uploadDir = join(__dirname, '../uploads');
       await fs.mkdir(uploadDir, { recursive: true });
       await fs.writeFile(
         join(uploadDir, fileName),
@@ -80,7 +80,7 @@ app.get('/api/files', async (req, res) => {
       // TODO: 实现 Vercel Blob 列表获取
       res.json({ files: [] });
     } else {
-      const uploadDir = join(__dirname, 'public', 'uploads');
+      const uploadDir = join(__dirname, '../uploads');
       await fs.mkdir(uploadDir, { recursive: true });
       const files = await fs.readdir(uploadDir);
       res.json({ files });
@@ -95,9 +95,85 @@ app.get('/api/files', async (req, res) => {
   }
 });
 
+// 兼容原有的 api.php 上传端点
+app.post('/api.php', async (req, res) => {
+  try {
+    // 验证上传密钥
+    const uploadKey = req.body.upload_key;
+    const serverUploadKey = process.env.UPLOAD_KEY;
+    
+    if (serverUploadKey && (!uploadKey || uploadKey !== serverUploadKey)) {
+      return res.status(403).json({
+        code: 99,
+        message: '上传密钥无效'
+      });
+    }
+
+    if (!req.files || !req.files.book) {
+      return res.status(400).json({
+        code: 99,
+        message: 'No file uploaded'
+      });
+    }
+
+    const file = req.files.book;
+    const fileName = file.name;
+    const fileContent = file.data;
+    const id = Date.now() + '-' + Math.floor(Math.random() * 999999);
+    const newFileName = `${id}.h2book`;
+
+    if (isVercel) {
+      // 使用 Vercel Blob 存储
+      const blob = await put(newFileName, fileContent, {
+        access: 'public',
+        token: process.env.BLOB_READ_WRITE_TOKEN,
+        contentType: 'application/octet-stream',
+        addRandomSuffix: false
+      });
+      
+      res.json({
+        code: 0,
+        message: 'File uploaded successfully',
+        data: {
+          url: blob.url,
+          id: id
+        }
+      });
+    } else {
+      // 本地存储
+      const uploadDir = join(__dirname, '../books');
+      await fs.mkdir(uploadDir, { recursive: true });
+      await fs.writeFile(
+        join(uploadDir, newFileName),
+        fileContent
+      );
+      
+      // 获取站点 URL
+      const protocol = req.headers['x-forwarded-proto'] || req.protocol;
+      const host = req.headers['x-forwarded-host'] || req.get('host');
+      const siteUrl = `${protocol}://${host}`;
+      
+      res.json({
+        code: 0,
+        message: 'File uploaded successfully',
+        data: {
+          url: `${siteUrl}/books/${newFileName}`,
+          id: id
+        }
+      });
+    }
+  } catch (error) {
+    console.error('Upload error:', error);
+    res.status(500).json({
+      code: 99,
+      message: 'Error uploading file: ' + error.message
+    });
+  }
+});
+
 // 所有其他路由都返回 index.html（支持前端路由）
 app.get('*', (req, res) => {
-  res.sendFile(join(__dirname, 'public', 'index.html'));
+  res.sendFile(join(__dirname, '../index.html'));
 });
 
 // 启动服务器（仅在非 Vercel 环境下）
