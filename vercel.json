@@ -3,5 +3,5 @@
   "outputDirectory": "server/dist",
   "installCommand": "cd web && yarn install && cd ../server && yarn install",
   "buildCommand": "cd server && node build.js",
-  "rewrites": [{ "source": "/(.*)", "destination": "/api" }]
+  "rewrites": [{ "source": "/api/(.*)", "destination": "/api/index.js" }]
 } 
