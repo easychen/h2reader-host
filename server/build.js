@@ -52,6 +52,12 @@ async function build() {
       join(apiDir, 'package.json')
     );
 
+    // 7. 复制 vercel.json 文件
+    await fs.copyFile(
+      join(__dirname, '../vercel.json'),
+      join(distDir, 'vercel.json')
+    );
+
     console.log('Build completed successfully!');
   } catch (error) {
     console.error('Build failed:', error);
