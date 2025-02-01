@@ -5,6 +5,6 @@
         {"name":"FreeSource Vol1","bookurl":"2"},
         {"name":"程序员和说学逗唱","bookurl":"3"}
     ],
-    "upload_url": "/api.php",
+    "upload_url": "/api/upload",
     "site_url": ""
 }
