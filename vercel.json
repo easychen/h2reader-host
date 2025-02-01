@@ -6,15 +6,17 @@
   "routes": [
     {
       "src": "/api/(.*)",
+      "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+      "dest": "/api/index.js"
+    },
+    {
+      "src": "/api.php",
+      "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
       "dest": "/api/index.js"
     },
     {
       "src": "/(.*)",
       "dest": "/$1"
-    },
-    {
-      "src": "/api.php",
-      "dest": "/api/index.js"
     }
   ]
 } 
