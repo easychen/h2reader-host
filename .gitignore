@@ -13,7 +13,7 @@ web/public/books/*.h2book
 /coverage
 
 # production
-/build
+build
 
 # misc
 .DS_Store
