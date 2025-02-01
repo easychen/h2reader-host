@@ -11,9 +11,9 @@
 
 ![](doc/screenshot.png)
 
-一键部署到 Vercel 
+<!-- 一键部署到 Vercel 
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Feasychen%2Fh2reader-host&env=UPLOAD_KEY&envDescription=%E7%94%A8%E4%BA%8E%E4%B8%8A%E4%BC%A0%E5%92%8C%E5%8F%91%E5%B8%83h2book%E7%9A%84Key%EF%BC%8C%E4%B8%8D%E5%86%99%E4%BB%BB%E4%BD%95%E4%BA%BA%E5%8F%AF%E4%BB%A5%E4%B8%8A%E4%BC%A0&buildCommand=cd%20server%20%26%26%20node%20build.js&outputDirectory=server%2Fdist&installCommand=cd%20web%20%26%26%20yarn%20install%20%26%26%20cd%20..%2Fserver%20%26%26%20yarn%20install)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Feasychen%2Fh2reader-host&env=UPLOAD_KEY&envDescription=%E7%94%A8%E4%BA%8E%E4%B8%8A%E4%BC%A0%E5%92%8C%E5%8F%91%E5%B8%83h2book%E7%9A%84Key%EF%BC%8C%E4%B8%8D%E5%86%99%E4%BB%BB%E4%BD%95%E4%BA%BA%E5%8F%AF%E4%BB%A5%E4%B8%8A%E4%BC%A0&buildCommand=cd%20server%20%26%26%20node%20build.js&outputDirectory=server%2Fdist&installCommand=cd%20web%20%26%26%20yarn%20install%20%26%26%20cd%20..%2Fserver%20%26%26%20yarn%20install) -->
 
 
 
