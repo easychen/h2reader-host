@@ -3,9 +3,14 @@
   "builds": [
     {
       "src": "server/build.js",
-      "use": "@vercel/node"
+      "use": "@vercel/node",
+      "config": {
+        "distDir": "server/dist"
+      }
     }
   ],
+  "installCommand": "cd web && yarn install && cd ../server && yarn install",
+  "buildCommand": "cd server && node build.js",
   "routes": [
     {
       "src": "/api/(.*)",
