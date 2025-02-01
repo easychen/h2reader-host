@@ -3,7 +3,7 @@ import { observer , inject } from 'mobx-react';
 import { withRouter, Link } from 'react-router-dom';
 import { translate } from 'react-i18next';
 import TalkItem from '../component/TalkItem'; 
-import { Icon, AnchorButton  } from "@blueprintjs/core";
+import { Icon, AnchorButton, Alert, Intent } from "@blueprintjs/core";
 
 @withRouter
 @translate()
@@ -17,7 +17,14 @@ export default class TalkList extends Component
         this.state = {
             "talks":[],
             "show_talks":[],
-            "end":false
+            "end":false,
+            "isAlertOpen": false,
+            "alertData": {
+                message: "",
+                nextBook: null,
+                confirmHandler: null,
+                cancelHandler: null
+            }
         };
         this.end_ref = React.createRef();
     }
@@ -101,10 +108,70 @@ export default class TalkList extends Component
             this.end_ref.current.scrollIntoView( true );
     }
 
+    showAlert(message, nextBook = null, confirmHandler, cancelHandler) {
+        this.setState({
+            isAlertOpen: true,
+            alertData: {
+                message,
+                nextBook,
+                confirmHandler,
+                cancelHandler
+            }
+        });
+    }
+
     goBack()
     {
-        if( !window.confirm( "当前章节已经完成，是否返回首页？" ) ) return false;
-        this.props.history.push("/");
+        // 从当前 URL 获取当前章节 ID
+        const currentPath = this.props.location.pathname;
+        let currentId = currentPath.split('/').pop();
+        // 进行 URL 解码
+        currentId = decodeURIComponent(currentId);
+        // 移除 .h2book 后缀
+        currentId = currentId.replace(/\.h2book$/, '');
+        
+        // 读取 books/index.json
+        fetch('/books/index.json')
+            .then(response => response.json())
+            .then(data => {
+                const books = data.books;
+                const currentIndex = books.findIndex(book => book.bookurl === currentId);
+                
+                // 检查是否有下一章
+                if (currentIndex > -1 && currentIndex < books.length - 1) {
+                    const nextBook = books[currentIndex + 1];
+                    this.showAlert(
+                        `是否继续阅读下一章《${nextBook.name}》？`,
+                        nextBook,
+                        () => {
+                            this.setState({ isAlertOpen: false });
+                            // this.props.history.push(`/read/${nextBook.bookurl}`);
+                            window.location.href = `/read/${nextBook.bookurl}`;
+                        },
+                        () => {
+                            this.setState({ isAlertOpen: false });
+                            window.location.href = "/";
+                        }
+                    );
+                } else {
+                     window.location.href = "/";
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // 如果出错，使用原来的逻辑
+                this.showAlert(
+                    "当前章节已经完成，是否返回首页？",
+                    null,
+                    () => {
+                        this.setState({ isAlertOpen: false });
+                        window.location.href = "/";
+                    },
+                    () => {
+                        this.setState({ isAlertOpen: false });
+                    }
+                );
+            });
     }
 
     
@@ -117,6 +184,19 @@ export default class TalkList extends Component
         
         return  state.talks  ?
         <div className="talklist-ro" >
+            <Alert
+                isOpen={state.isAlertOpen}
+                confirmButtonText={state.alertData.nextBook ? "继续阅读" : "返回首页"}
+                cancelButtonText="取消"
+                intent={Intent.PRIMARY}
+                icon="help"
+                onConfirm={state.alertData.confirmHandler}
+                onCancel={state.alertData.cancelHandler}
+                canEscapeKeyCancel={true}
+                canOutsideClickCancel={true}
+            >
+                {state.alertData.message}
+            </Alert>
             <div className="thelist">
             { state.show_talks.length > 0 
             ? 
