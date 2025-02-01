@@ -1,11 +1,5 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "server/build.js",
-      "use": "@vercel/node"
-    }
-  ],
   "outputDirectory": "server/dist",
   "installCommand": "cd web && yarn install && cd ../server && yarn install",
   "buildCommand": "cd server && node build.js",
