@@ -26,10 +26,10 @@
     "react-scripts": "^3.1.1"
   },
   "scripts": {
-    "start": "react-app-rewired start",
-    "build": "react-app-rewired build",
-    "test": "react-app-rewired react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "react-app-rewired --openssl-legacy-provider start",
+    "build": "react-app-rewired --openssl-legacy-provider build",
+    "test": "react-app-rewired --openssl-legacy-provider react-scripts test",
+    "eject": "react-scripts --openssl-legacy-provider eject"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -43,7 +43,8 @@
   "devDependencies": {
     "@babel/plugin-proposal-decorators": "^7.4.4",
     "customize-cra": "^0.2.11",
-    "node-sass": "^7.0.0",
-    "react-app-rewired": "^2.1.0"
-  }
+    "react-app-rewired": "^2.1.0",
+    "sass": "^1.83.4"
+  },
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }

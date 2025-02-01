@@ -1,12 +1,13 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-/node_modules
+node_modules
+dist
 /.vscode
 /.pnp
 .pnp.js
 
-/public/books/*.h2book
+web/public/books/*.h2book
 
 # testing
 /coverage
