@@ -3,20 +3,5 @@
   "outputDirectory": "server/dist",
   "installCommand": "cd web && yarn install && cd ../server && yarn install",
   "buildCommand": "cd server && node build.js",
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-      "dest": "/api/index.js"
-    },
-    {
-      "src": "/api.php",
-      "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-      "dest": "/api/index.js"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/$1"
-    }
-  ]
+  "rewrites": [{ "source": "/(.*)", "destination": "/api" }]
 } 
