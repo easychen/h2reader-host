@@ -46,6 +46,15 @@ export default class Reader extends Component
     
     componentDidMount()
     {
+        // 检查是否有本地文件数据
+        if (this.props.location.state && this.props.location.state.bookData) {
+            const jsondata = this.props.location.state.bookData;
+            const sortedTalks = sortTalks(jsondata.talks);
+            jsondata.talks = sortedTalks;
+            this.setState({ ...jsondata });
+            return;
+        }
+
         let bookid = 1;
         let bookpath = `/books/${bookid}.h2book`;
 

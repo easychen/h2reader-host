@@ -32,7 +32,25 @@ export default class List extends Component
 {
     state = { 
         "books":[],
-        "bookurl":""
+        "bookurl":"",
+        "selectedFile": null
+    }
+
+    handleFileSelect = (event) => {
+        const file = event.target.files[0];
+        if (file && file.name.endsWith('.h2book')) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const content = e.target.result;
+                const jsonData = JSON.parse(content);
+                if (jsonData) {
+                    this.props.history.push('/read/local', { bookData: jsonData });
+                }
+            };
+            reader.readAsText(file);
+        } else {
+            window.alert('请选择.h2book文件');
+        }
     }
 
     doJump()
@@ -62,7 +80,28 @@ export default class List extends Component
                 <div className="left">
                     <ControlGroup fill={true} vertical={false}>
 
-                    <InputGroup placeholder="输入.h2book文件的url..." value={this.state.bookurl} onChange={ ( evt )=>{ this.setState( { "bookurl" : evt.target.value } ) }} large={true} />
+                    <InputGroup 
+                        placeholder="输入.h2book文件的url..." 
+                        value={this.state.bookurl} 
+                        onChange={ ( evt )=>{ this.setState( { "bookurl" : evt.target.value } ) }} 
+                        large={true} 
+                        rightElement={
+                            <>
+                                <input 
+                                    type="file" 
+                                    accept=".h2book" 
+                                    style={{ display: 'none' }} 
+                                    onChange={this.handleFileSelect} 
+                                    id="file-input"
+                                />
+                                <Button 
+                                    icon="document" 
+                                    minimal={true} 
+                                    onClick={() => document.getElementById('file-input').click()}
+                                />
+                            </>
+                        }
+                    />
 
                     <Button icon="arrow-right" onClick={()=>{this.doJump()}} large={true} />
 
